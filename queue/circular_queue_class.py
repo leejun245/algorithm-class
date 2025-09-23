@@ -12,7 +12,7 @@ class CircularQueueOneSlotEmpty:
     def __init__(self, capacity):
         self.capacity = capacity
         self.N = self.capacity + 1 # 내부배열 크기 (단, 배열의 한칸(슬롯) 비움)
-        self.array = [] * self.N
+        self.array = [None] * self.N
         self.front = 0
         self.rear = 0
 
@@ -22,7 +22,36 @@ class CircularQueueOneSlotEmpty:
     def is_full(self):
         return self.front == (self.rear + 1) % self.N
     
-   
+    def enqueue(self, item):
+        # 맨 뒤에 요소를 추가
+        if not self.is_full():
+            self.rear = (self.rear + 1) % self.N
+            self.array[self.rear] = item
+        else:
+            print("원형큐가 포화 상태 -> 요소 삽입이 불가능")
+
+    def dequeue(self):
+        # 맨 앞의 요소를 제거
+        if not self.is_empty():
+            self.front = (self.front + 1) % self.N
+            item = self.array[self.front]
+            self.array[self.front] = None
+
+            return item
+        else:
+            raise IndexError("원형 큐가 공백 상태 -> 요소 삭제 불가능")
+        
+    def peek(self):
+        # 현재 원형 큐에 저장된 맨 앞의 요소를 검색
+        if not self.is_empty():
+            return self.array[(self.front + 1) % self.N]
+        else:
+            return IndexError("원형 큐가 공백 상태")
+        
+    def size(self):
+        #현재 원형큐에 저장되어 있는 요소의 총 개수
+        return (self.rear - self.front + self.N) % self.N
+    
     def display(self, msg="CircularQueueOneSlotEmpty"):
         
         print(f"{msg}: front={self.front}, rear={self.rear}, size={self.size()}/{self.capacity}")
@@ -66,7 +95,7 @@ def test_basic():
     # test_basic() : 가득 채우기 → 전부 비우기 → 다시 1개 넣기
     print("\n=== test_basic ===")
     q = CircularQueueOneSlotEmpty(capacity=8)
-    q.display("초기 상태")
+    q.display("초기 상태") # front=0, rear=0
     print()
 
     # 가득 채우기   
@@ -75,7 +104,7 @@ def test_basic():
     q.display("포화 상태")
     print()
 
-    # 다시 1개 넣기
+    # 다시 1개 넣기 ===> overflower 발생 -> 삽입 실패
     q.enqueue(777)
     q.display()
     print("peek:", q.peek())
@@ -85,16 +114,42 @@ def test_basic():
     print("삭제순서: ", end="")
     while not q.is_empty():
         print(q.dequeue(), end=" ")
-    q.display("모두 제거 후")
+    q.display("모두 제거 후") # front == rear != 0 (False, Full, 즉 거짓 포화 문제 해결)
     print()
 
     # 다시 1개 넣기
+    print("비어있는 상태에서 삽입 시도!!")
     q.enqueue(777)
     q.display()
     print("peek:", q.peek())
 
-     
+def quiz_2(): # 67p #2
+    # 1. capacity 8인 원형큐
+    print("=============Quiz_2=============")
+    q = CircularQueueOneSlotEmpty(capacity=8)
+    # 2. front = rear = 6
+    q.front = 6
+    q.rear = 6
+    # 연산 처리
+    q.enqueue(10)
+    q.display("10 삽입 결과")
+    q.enqueue(11)
+    q.display("11 삽입 결과")
+    q.enqueue(12)
+    q.display("12 삽입 결과")
+    q.enqueue(13)
+    q.display("13 삽입 결과")
+    q.dequeue()
+    q.display("10 삭제 결과")
+    q.dequeue()
+    q.display("11 삭제 결과")
+    # front = > , rear = ?
+    print(f"front={q.front}, rear = {q.rear}")
 
+#def quiz_1(): 79p 
+
+#def quiz_5():
+    
 if __name__ == "__main__":
     test_basic()
-    
+    quiz_2()

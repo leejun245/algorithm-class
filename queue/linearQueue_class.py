@@ -23,7 +23,7 @@ class LinearQueueNoReset:
     def is_full(self):
         return self.rear == self.capacity - 1  # rear가 끝에 도달하면 포화 상태
     def size(self):
-        return self.rear + 1  # 현재 큐의 저장된 항목 수
+        return self.rear - self.front  # 현재 큐의 저장된 항목 수
     def peek(self):
         if self.is_empty():
             return None
@@ -40,7 +40,7 @@ class LinearQueueNoReset:
         if not self.is_empty():
             item = self.array[self.front + 1]
             
-            for i in range(1, self.rear+1):
+            for i in range(1, self.size()):
                 self.array[i-1] = self.array[i]
             self.array[self.rear] = None    
             self.rear -= 1
