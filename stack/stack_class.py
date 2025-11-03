@@ -41,7 +41,7 @@ class ArrayStack:
         return self.top + 1
 
 # 스택 클래스를 이용한 문자열 거꾸로 뒤집어 출력하기
-def reverse_string(statement: str) -> str:
+def reverse_string(statement):
     print("\n[1] PUSH 단계 -----------------")
     st = ArrayStack(len(statement))
     for ch in statement:

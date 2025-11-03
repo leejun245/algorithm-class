@@ -14,37 +14,79 @@ MORSE_TABLE = [
 
 
 
-# 2. 수식트리  
+# 2. 인코드 : 영문자 A ~ Z 그리고 공백 문자 -> 모스부호 변환
+def encode(ch):
+    ch = ch.upper()
+    if ch == ' ':
+        return '/'  # 공백 문자는 '/'로 인코딩
+    elif 'A' <= ch <= 'Z' :
+        idx = ord(ch) - ord('A') # 모스테이블 리스트의 인덱스
+        return MORSE_TABLE[idx][1]
+    else:
+        return '?' # 미지원 문자
+# 3. 디코드 : 결정트리로 모스부호 -> 해당 문자로 변환
 
-    
+def decode(root, code):
+    # 선형구조 대신 계층 구조인 트리 사용 : 효율적 방식
+    # 파라미터 root : 모스코드 결정트리의 루트노드
+    if code == '/':
+        return ' '  # '/'는 공백 문자로 디코딩
+    node = root # 결정트리의 루트 시작
+    for c in code: # 모스부로 문자열(., -)에 대하여 반복 처리
+        if c == '.' : # 점이면
+            node = node.left # 왼쪽이동
+        if c == '-' : # 데시이면
+            node = node.right # 오른쪽이동
+        if node == None: # 노드가 존재하지 않으면
+            return '?' 
 
+    if node and node.data:
+        return node.data # 해당 노드임 문자 반환
+    else:
+        return '?' # 미지원 코드    
 
+# 4. 결정트리 생성
+def make_morse_tree():
+    root = BTNode(None, None,None) # 1.
+    for ch, code in MORSE_TABLE: # 모스부호 테이블의 각 튜플(문자, 부호)에 대해 반복 처리
+        cur = root # 루트노드로부터 시작 현재루드
+        for c in code:
+            if c == '.': # 점이면
+                if cur.left is None:
+                    cur.left = BTNode(None, None, None) # 새 노드 생성
+                cur = cur.left # 왼쪽 자식 노드로 이동
 
+            else: # '-'이면
+                if cur.right is None:
+                    cur.right = BTNode(None, None, None) # 새 노드 생성
+                cur = cur.right # 오른쪽 자식 노드로 이동
+        # 부호의 끝에 도달했으면 해당 노드에 문자 저장
+        cur.data = ch # 모스부호 문자열의 끝에 도달하면 해당 노드에 문자 저장
+    return root # 결정트리의 루트 노드 반환
 
-
-
+# 2. 수식트리
 
 #===================================================
 # 테스트 프로그램 : 결정 트리(이진 트리) 기반 모스 코드 트리
 #===================================================   
 
-# if __name__ == "__main__":
-#     morseCodeTree = make_morse_tree()
-#     s = input("입력 문장 : ").strip() # GAMEOVER, DATA
+if __name__ == "__main__":
+     morseCodeTree = make_morse_tree()
+     s = input("입력 문장 : ").strip() # GAMEOVER, DATA
 
-#     mlist = [ ]
-#     for ch in s:
-#       code = encode(ch) 
-#       mlist.append(code)
-#     print("Morse Code:", mlist)
+     mlist = [ ]
+     for ch in s:
+       code = encode(ch) 
+       mlist.append(code)
+     print("Morse Code:", mlist)
 
-#     print("Decoding: ", end='')
-#     for code in mlist:
-#         print(decode(morseCodeTree, code), end='')
-#     print()
+     print("Decoding: ", end='')
+     for code in mlist:
+         print(decode(morseCodeTree, code), end='')
+     print()
    
 #==================================================
-# 테스트 프로그램 코드 4.17: 수식 트리 생성 및 순회 및 평가
+# 테스트 프로그램 코드 4.17: 수식 트리 생성 및 순회 및 평가 중간아님
 #=====================================================  
 # if __name__ == "__main__":
 #     # (1+3) * (4/2)
@@ -84,4 +126,3 @@ MORSE_TABLE = [
 #     print(root)
 #     result = evaluate(root)         # 평가
 #     print("평가 결과 =", result)    # 예상 결과: 6.0
-
