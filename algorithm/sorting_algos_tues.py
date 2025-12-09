@@ -2,32 +2,36 @@ import random
 import time
 import matplotlib.pyplot as plt # type: ignore
 from collections import deque
+# ======================================================
+# 1. 정렬 알고리즘
+# ======================================================
+def selection_sort(arr): # 선택정렬
+    a = arr[:] # 원본 복사
+    n = len(a)  # 배열 크기
+    for i in range(n - 1): # i번째 위치에 최소값 삽입
+        min_idx = i # 최소값 인덱스
+        for j in range(i + 1, n): # 미정렬 구간 탐색
+            if a[j] < a[min_idx]: # 더 작은 값 발견
+                min_idx = j # 최소값 인덱스 갱신
+        
+        a[i], a[min_idx] = a[min_idx], a[i] # i번째 위치와 최소값 위치 교환
+    return a # 반환
 
-#=======================================================
-# 1. 정렬 알고리즘 구현
-#=======================================================
-def selection_sort(arr): # 선택 정렬
-    a = arr[:] # 원본을 복사
-    n = len(arr) #배열 크기
-    for i in range(n-1): # i번쨰 위치에서 최소값 삽입
-        least_idx = i # 최소값 인덱스
-        for j in range(i+1, n): # i+1 ~ n-1 미정렬된 구간 탐색
-            if a[j] < a[least_idx]: # 더 작은 값을 발견
-                least_idx = j # 최소값 인덱스 갱신
-        a[i], a[least_idx] = a[least_idx], a[i] # 최소값과 i번째 위치 교환
-    return a
-            
-def insertion_sort(arr): # 삽입 정렬
-    a = arr[:] # 원본을 복사
-    n = len(arr) #배열 크기
-    for i in range(1, n): # 두번쨰 요소부터 시작
+def insertion_sort(arr): # 삽입정렬
+    a = arr[:] # 원본 복사
+    n = len(a)  # 배열 크기
+    for i in range(1, n): # 두 번째 원소부터 시작
         key = a[i] # 삽입할 원소
-        j = i-1 # 정렬된 구간의 마지막 인덱스
-        while j >= 0 and a[j] > key: # 삽입 위치 확인 앞은 범위를 안 벗어나게 하기위해
-            a[j+1] = a[j] # 요소를 한칸 뒤로 이동 
+        j = i - 1 # 정렬된 구간의 마지막 인덱스
+        while j >= 0 and a[j] > key: # 삽입할 위치 탐색
+            a[j + 1] = a[j] # 원소를 한 칸씩 뒤로 이동
             j -= 1 # 인덱스 감소
-        a[j+1] = key # 삽입
-    return a
+        a[j + 1] = key # 삽입
+    return a # 반환
+
+
+
+
 
 
 # ======================================================
